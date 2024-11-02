@@ -22,17 +22,17 @@
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
+#include "lps25hb.h"
+#include "string.h"
 
 uint32_t data_read=0;
 
 uint8_t usartMsg[] = "Start\n\r";
 uint8_t usartMsgRead[] = "Read\n\r";
+uint8_t usartMsgData[] = "---\n\r";
 
 uint8_t usartMsgDebug[100] = "D\n\r";
 
-#define 	LSM6DS0_DEVICE_ADDRESS		0xD6U
-#define 	LSM6DS0_WHO_AM_I_VALUE		0x68U
-#define 	LSM6DS0_WHO_AM_I_ADDRES		0x0FU
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -112,11 +112,20 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-
+  //Print start of the code
   sprintf(usartMsgDebug, "[_][_][_]Program Start[_][_][_]\n\r");
   USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
   LL_mDelay(100);
 
+  //Who am I test
+  data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_WHO_AM_I_ADDRES, 0);
+  if(data_read == LPS25HB_WHO_AM_I_VALUE){
+  	  USART2_PutBuffer(usartMsgRead, sizeof(usartMsgRead));
+  }
+  LL_mDelay(1000);
+
+  //Reset memory of usartMsgDebug
+  memset(usartMsgDebug, 0, sizeof(usartMsgDebug));
 
   /* USER CODE END 2 */
 
@@ -126,15 +135,23 @@ int main(void)
   {
     /* USER CODE END WHILE */
 	  //Writing via USART to PC [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
-	  USART2_PutBuffer(usartMsg, sizeof(usartMsg));
+	  sprintf(usartMsgDebug, "..\n\r");
+	  USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
 	  LL_mDelay(1000);
 
 
-	  data_read = (uint32_t)i2c_read(LSM6DS0_DEVICE_ADDRESS, LSM6DS0_WHO_AM_I_ADDRES, 0);
-	  if(data_read == LSM6DS0_WHO_AM_I_VALUE){
-		  USART2_PutBuffer(usartMsgRead, sizeof(usartMsgRead));
-	  }
+	  //Write settings
+
+	  i2c_write(LPS25HB_DEVICE_ADDRESS_WRITE_1, LPS25HB_CTRL_REG1, 0x80, 1);
+	  sprintf(usartMsgDebug, "W.\n\r");
+	  USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
 	  LL_mDelay(1000);
+
+
+	  //data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_XL, 3);
+	  //data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_WHO_AM_I_ADDRES, 0);
+	  snprintf(usartMsgData, sizeof(usartMsgData), "%ld\r\n", data_read);
+	  USART2_PutBuffer(usartMsgData, sizeof(usartMsgData));
 	  //Writing via USART to PC [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
     /* USER CODE BEGIN 3 */
   }
