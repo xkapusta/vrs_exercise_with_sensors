@@ -23,7 +23,7 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8_t data_read=0;
+uint32_t data_read=0;
 
 uint8_t usartMsg[] = "Start\n\r";
 uint8_t usartMsgRead[] = "Read\n\r";
@@ -130,7 +130,7 @@ int main(void)
 	  LL_mDelay(1000);
 
 
-	  //data_read = i2c_read(LSM6DS0_DEVICE_ADDRESS, LSM6DS0_WHO_AM_I_ADDRES, 1);
+	  data_read = (uint32_t)i2c_read(LSM6DS0_DEVICE_ADDRESS, LSM6DS0_WHO_AM_I_ADDRES, 0);
 	  if(data_read == LSM6DS0_WHO_AM_I_VALUE){
 		  USART2_PutBuffer(usartMsgRead, sizeof(usartMsgRead));
 	  }

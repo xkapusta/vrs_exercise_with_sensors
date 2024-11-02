@@ -23,6 +23,12 @@
 
 /* USER CODE BEGIN 0 */
 uint8_t data_recive=0;
+
+uint8_t data_recive_8=0;
+uint16_t data_recive_16=0;
+uint32_t data_recive_32=0;
+
+uint8_t data_recive_multy[3];
 /* USER CODE END 0 */
 
 /* I2C1 init function */
@@ -82,8 +88,20 @@ void MX_I2C1_Init(void)
 
 }
 
-uint8_t i2c_read(uint8_t slave_address, uint8_t register_address, uint8_t number_of_registers){
+uint32_t i2c_read(uint8_t slave_address, uint8_t register_address, uint8_t number_of_registers){
 	data_recive=0;
+	if(number_of_registers == 1){
+		data_recive_8=0;
+		register_address |= 0x80;
+	}
+	if(number_of_registers == 2){
+		data_recive_16=0;
+		register_address |= 0x80;
+	}
+	if(number_of_registers == 3){
+		data_recive_32=0;
+		register_address |= 0x80;
+	}
 
 	LL_I2C_HandleTransfer(I2C1, slave_address, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
 	while (!LL_I2C_IsActiveFlag_TXIS(I2C1)) {}
@@ -94,16 +112,43 @@ uint8_t i2c_read(uint8_t slave_address, uint8_t register_address, uint8_t number
 	LL_I2C_HandleTransfer(I2C1, slave_address, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ);
 	while (!LL_I2C_IsActiveFlag_RXNE(I2C1)) {}
 
-	data_recive = LL_I2C_ReceiveData8(I2C1);
-	while (!LL_I2C_IsActiveFlag_STOP(I2C1)) {}
-
+	if(number_of_registers > 1){
+		for(int i=0; i<number_of_registers;i++){
+			data_recive_multy[i] = LL_I2C_ReceiveData8(I2C1);
+			while (!LL_I2C_IsActiveFlag_STOP(I2C1)) {}
+		}
+	}else{
+		data_recive = LL_I2C_ReceiveData8(I2C1);
+		while (!LL_I2C_IsActiveFlag_STOP(I2C1)) {}
+	}
 	//LL_I2C_GenerateStopCondition(I2C1);
 	LL_I2C_ClearFlag_STOP(I2C1);
 
-	return data_recive;
-}
 
+
+	if(number_of_registers == 1){
+		return data_recive_8;
+	}
+	if(number_of_registers == 2){
+		data_recive_16 = (data_recive_multy[1] << 8) | data_recive_multy[0];
+		return data_recive_16;
+	}
+	if(number_of_registers == 3){
+		data_recive_32 = (data_recive_multy[2] << 16) | (data_recive_multy[1] << 8) | data_recive_multy[0];
+		return data_recive_32;
+	}
+	if(number_of_registers == 0){
+		return data_recive;
+	}
+}
 /*
+uint8_t high_byte = 0x12;  // Example high byte
+uint8_t low_byte = 0x34;   // Example low byte
+
+// Combine high and low bytes into a 16-bit number
+uint16_t combined = (high_byte << 8) | low_byte;
+*/
+
 uint8_t i2c_write(uint8_t slave_address, uint8_t register_address, uint8_t number_of_registers){
 	LL_I2C_HandleTransfer(I2C1, slave_address, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
 
@@ -111,9 +156,8 @@ uint8_t i2c_write(uint8_t slave_address, uint8_t register_address, uint8_t numbe
 
 	//Data to write
 
-	LL_I2C_GenerateStopCondition(I2C1);
 }
-*/
+
 
 
 
