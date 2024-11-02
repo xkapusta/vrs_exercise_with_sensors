@@ -19,9 +19,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
+#include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+uint8_t data_recive=0;
 /* USER CODE END 0 */
 
 /* I2C1 init function */
@@ -76,10 +77,45 @@ void MX_I2C1_Init(void)
   LL_I2C_Init(I2C1, &I2C_InitStruct);
   LL_I2C_SetOwnAddress2(I2C1, 0, LL_I2C_OWNADDRESS2_NOMASK);
   /* USER CODE BEGIN I2C1_Init 2 */
-
+  LL_I2C_Enable(I2C1);
   /* USER CODE END I2C1_Init 2 */
 
 }
+
+uint8_t i2c_read(uint8_t slave_address, uint8_t register_address, uint8_t number_of_registers){
+	data_recive=0;
+
+	LL_I2C_HandleTransfer(I2C1, slave_address, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
+	while (!LL_I2C_IsActiveFlag_TXIS(I2C1)) {}
+
+	LL_I2C_TransmitData8(I2C1, register_address);
+	while (!LL_I2C_IsActiveFlag_TC(I2C1)) {}
+
+	LL_I2C_HandleTransfer(I2C1, slave_address, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_READ);
+	while (!LL_I2C_IsActiveFlag_RXNE(I2C1)) {}
+
+	data_recive = LL_I2C_ReceiveData8(I2C1);
+	while (!LL_I2C_IsActiveFlag_STOP(I2C1)) {}
+
+	//LL_I2C_GenerateStopCondition(I2C1);
+	LL_I2C_ClearFlag_STOP(I2C1);
+
+	return data_recive;
+}
+
+/*
+uint8_t i2c_write(uint8_t slave_address, uint8_t register_address, uint8_t number_of_registers){
+	LL_I2C_HandleTransfer(I2C1, slave_address, LL_I2C_ADDRSLAVE_7BIT, 1, LL_I2C_MODE_SOFTEND, LL_I2C_GENERATE_START_WRITE);
+
+	LL_I2C_TransmitData8(I2C1, register_address);
+
+	//Data to write
+
+	LL_I2C_GenerateStopCondition(I2C1);
+}
+*/
+
+
 
 /* USER CODE BEGIN 1 */
 

@@ -23,7 +23,16 @@
 #include "usart.h"
 #include "gpio.h"
 
-uint8_t usartMsg[] = "MSG from STM32!\n\r";
+uint8_t data_read=0;
+
+uint8_t usartMsg[] = "Start\n\r";
+uint8_t usartMsgRead[] = "Read\n\r";
+
+uint8_t usartMsgDebug[100] = "D\n\r";
+
+#define 	LSM6DS0_DEVICE_ADDRESS		0xD6U
+#define 	LSM6DS0_WHO_AM_I_VALUE		0x68U
+#define 	LSM6DS0_WHO_AM_I_ADDRES		0x0FU
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -52,7 +61,7 @@ uint8_t usartMsg[] = "MSG from STM32!\n\r";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
+//void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -103,6 +112,12 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+
+  sprintf(usartMsgDebug, "[_][_][_]Program Start[_][_][_]\n\r");
+  USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
+  LL_mDelay(100);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,8 +125,17 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  //Writing via USART to PC [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
 	  USART2_PutBuffer(usartMsg, sizeof(usartMsg));
-	  LL_mDelay(500);
+	  LL_mDelay(1000);
+
+
+	  //data_read = i2c_read(LSM6DS0_DEVICE_ADDRESS, LSM6DS0_WHO_AM_I_ADDRES, 1);
+	  if(data_read == LSM6DS0_WHO_AM_I_VALUE){
+		  USART2_PutBuffer(usartMsgRead, sizeof(usartMsgRead));
+	  }
+	  LL_mDelay(1000);
+	  //Writing via USART to PC [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
