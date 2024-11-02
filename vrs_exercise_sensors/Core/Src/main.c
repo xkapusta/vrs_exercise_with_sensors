@@ -29,9 +29,16 @@ uint32_t data_read=0;
 
 uint8_t usartMsg[] = "Start\n\r";
 uint8_t usartMsgRead[] = "Read\n\r";
+uint8_t usartMsgWrite[] = "Write\n\r";
 uint8_t usartMsgData[] = "---\n\r";
 
+uint8_t usartMsgForm[] = "WSet--\n\r";
+
+uint8_t usartMsgWho[] = "Who\n\r";
+
 uint8_t usartMsgDebug[100] = "D\n\r";
+
+uint8_t writeSettings=0;
 
 
 /* Private includes ----------------------------------------------------------*/
@@ -115,44 +122,44 @@ int main(void)
   //Print start of the code
   sprintf(usartMsgDebug, "[_][_][_]Program Start[_][_][_]\n\r");
   USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
-  LL_mDelay(100);
+  LL_mDelay(500);
 
   //Who am I test
   data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_WHO_AM_I_ADDRES, 0);
   if(data_read == LPS25HB_WHO_AM_I_VALUE){
-  	  USART2_PutBuffer(usartMsgRead, sizeof(usartMsgRead));
+	  USART2_PutBuffer(usartMsgWho, sizeof(usartMsgWho));
+	  LL_mDelay(100);
   }
   LL_mDelay(1000);
 
   //Reset memory of usartMsgDebug
-  memset(usartMsgDebug, 0, sizeof(usartMsgDebug));
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */
-	  //Writing via USART to PC [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
-	  sprintf(usartMsgDebug, "..\n\r");
-	  USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
-	  LL_mDelay(1000);
+	  //Write settings [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
+	  if(writeSettings == 0){
+		  uint8_t settings=0x80;
+		  i2c_write(LPS25HB_DEVICE_ADDRESS_WRITE_1, LPS25HB_CTRL_REG1, settings, 1);
+		  if((uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_CTRL_REG1, 0) == settings){
+			  writeSettings=1;
+		  }
+		  USART2_PutBuffer(("WSet--\n\r"), sizeof(("WSet--\n\r")));
+	  }
+	  //Write settings [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
 
 
-	  //Write settings
 
-	  i2c_write(LPS25HB_DEVICE_ADDRESS_WRITE_1, LPS25HB_CTRL_REG1, 0x80, 1);
-	  sprintf(usartMsgDebug, "W.\n\r");
-	  USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
-	  LL_mDelay(1000);
+	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
+	  data_read=0;
+	  data_read=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_CTRL_REG1, 3);
 
-
-	  //data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_XL, 3);
-	  //data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_WHO_AM_I_ADDRES, 0);
-	  snprintf(usartMsgData, sizeof(usartMsgData), "%ld\r\n", data_read);
-	  USART2_PutBuffer(usartMsgData, sizeof(usartMsgData));
-	  //Writing via USART to PC [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
+	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
