@@ -120,8 +120,13 @@ uint32_t i2c_read(uint8_t slave_address, uint8_t register_address, uint8_t numbe
 
 	if(number_of_registers > 1){
 		for(int i=0; i<number_of_registers;i++){
+			while (!LL_I2C_IsActiveFlag_RXNE(I2C1)) {
+				if (LL_I2C_IsActiveFlag_STOP(I2C1)) {
+					LL_I2C_ClearFlag_STOP(I2C1);
+				}
+			}
 			data_recive_multy[i] = LL_I2C_ReceiveData8(I2C1);
-			while (!LL_I2C_IsActiveFlag_TC(I2C1)) {}
+			//while (!LL_I2C_IsActiveFlag_(I2C1)) {}
 		}
 	}else{
 		data_recive = LL_I2C_ReceiveData8(I2C1);

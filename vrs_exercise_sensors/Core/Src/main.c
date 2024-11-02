@@ -40,6 +40,12 @@ uint8_t usartMsgDebug[100] = "D\n\r";
 
 uint8_t writeSettings=0;
 
+uint8_t periodic_msg[100];
+
+uint32_t data_read_R1=0;
+uint32_t data_read_R2=0;
+uint32_t data_read_R3=0;
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -157,7 +163,21 @@ int main(void)
 
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
 	  data_read=0;
-	  data_read=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_CTRL_REG1, 3);
+	  data_read_R1=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_XL, 1);
+	  data_read_R2=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_L, 1);
+	  data_read_R3=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_H, 1);
+	  data_read=(data_read_R3 << 16) | (data_read_R2 << 8) | data_read_R1;
+	  snprintf(periodic_msg, sizeof(periodic_msg), "Single: %lu %lu %lu -> %lu \r\n", data_read_R1,data_read_R2,data_read_R3,data_read);
+
+	  USART2_PutBuffer(periodic_msg, sizeof(periodic_msg));
+  	  LL_mDelay(1000);
+
+
+	  data_read=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_XL, 3);
+	  snprintf(periodic_msg, sizeof(periodic_msg), "Multy : %lu -------------------\r\n", data_read);
+
+	  USART2_PutBuffer(periodic_msg, sizeof(periodic_msg));
+	  LL_mDelay(1000);
 
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
     /* USER CODE BEGIN 3 */
