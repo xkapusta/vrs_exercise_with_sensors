@@ -128,6 +128,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   //Sensors setup
   lps25hb_Init();
+  hts221_Init();
 
   //Print start of the code
   sprintf(usartMsgDebug, "[_][_][_]Program Start[_][_][_]\n\r");

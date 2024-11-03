@@ -37,17 +37,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_rnglists 000005d8  00000000  00000000  00010c80  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0001785f  00000000  00000000  00011258  2**0
+ 17 .debug_macro  000176c4  00000000  00000000  00011258  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00008735  00000000  00000000  00028ab7  2**0
+ 18 .debug_line   00008735  00000000  00000000  0002891c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    0007776a  00000000  00000000  000311ec  2**0
+ 19 .debug_str    0007776a  00000000  00000000  00031051  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000a8956  2**0
+ 20 .comment      00000043  00000000  00000000  000a87bb  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  0000322c  00000000  00000000  000a899c  2**2
+ 21 .debug_frame  0000322c  00000000  00000000  000a8800  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000073  00000000  00000000  000abbc8  2**0
+ 22 .debug_line_str 00000073  00000000  00000000  000aba2c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2997,10 +2997,10 @@ int main(void)
  8001820:	4b18      	ldr	r3, [pc, #96]	@ (8001884 <main+0xd4>)
  8001822:	2218      	movs	r2, #24
  8001824:	601a      	str	r2, [r3, #0]
+
+  while (1)
+  {
     /* USER CODE END WHILE */
-
-
-
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
 	  data_read=0;
  8001826:	4b18      	ldr	r3, [pc, #96]	@ (8001888 <main+0xd8>)
