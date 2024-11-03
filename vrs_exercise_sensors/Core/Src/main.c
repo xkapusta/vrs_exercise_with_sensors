@@ -124,19 +124,15 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  //Sensors setup
+  lps25hb_Init();
 
   //Print start of the code
   sprintf(usartMsgDebug, "[_][_][_]Program Start[_][_][_]\n\r");
   USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
   LL_mDelay(500);
 
-  //Who am I test
-  data_read = (uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_WHO_AM_I_ADDRES, 0);
-  if(data_read == LPS25HB_WHO_AM_I_VALUE){
-	  USART2_PutBuffer(usartMsgWho, sizeof(usartMsgWho));
-	  LL_mDelay(100);
-  }
-  LL_mDelay(1000);
+
 
   //Reset memory of usartMsgDebug
 
@@ -148,36 +144,15 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  //Write settings [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
-	  if(writeSettings == 0){
-		  uint8_t settings=0x80;
-		  i2c_write(LPS25HB_DEVICE_ADDRESS_WRITE_1, LPS25HB_CTRL_REG1, settings, 1);
-		  if((uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_CTRL_REG1, 0) == settings){
-			  writeSettings=1;
-		  }
-		  USART2_PutBuffer(("WSet--\n\r"), sizeof(("WSet--\n\r")));
-	  }
-	  //Write settings [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
 
 
 
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
 	  data_read=0;
-	  data_read_R1=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_XL, 1);
-	  data_read_R2=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_L, 1);
-	  data_read_R3=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_H, 1);
-	  data_read=(data_read_R3 << 16) | (data_read_R2 << 8) | data_read_R1;
-	  snprintf(periodic_msg, sizeof(periodic_msg), "Single: %lu %lu %lu -> %lu \r\n", data_read_R1,data_read_R2,data_read_R3,data_read);
-
+	  data_read=pressureRead();
+	  snprintf(periodic_msg, sizeof(periodic_msg), "Presure: %lu \r\n", data_read);
 	  USART2_PutBuffer(periodic_msg, sizeof(periodic_msg));
-  	  LL_mDelay(1000);
-
-
-	  data_read=(uint32_t)i2c_read(LPS25HB_DEVICE_ADDRESS_READ_1, LPS25HB_PRESS_OUT_XL, 3);
-	  snprintf(periodic_msg, sizeof(periodic_msg), "Multy : %lu -------------------\r\n", data_read);
-
-	  USART2_PutBuffer(periodic_msg, sizeof(periodic_msg));
-	  LL_mDelay(1000);
+	  LL_mDelay(500);
 
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
     /* USER CODE BEGIN 3 */
