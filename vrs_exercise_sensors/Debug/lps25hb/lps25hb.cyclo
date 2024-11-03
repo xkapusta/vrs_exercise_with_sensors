@@ -1,2 +1,3 @@
-../lps25hb/lps25hb.c:20:6:lps25hb_Init	6
-../lps25hb/lps25hb.c:53:10:pressureRead	1
+../lps25hb/lps25hb.c:23:6:lps25hb_Init	7
+../lps25hb/lps25hb.c:59:10:pressureRead	1
+../lps25hb/lps25hb.c:67:8:heightCalculation	1

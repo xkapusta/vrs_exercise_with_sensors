@@ -34,6 +34,7 @@
 
 void lps25hb_Init(void);
 uint32_t pressureRead(void);
+double heightCalculation(uint32_t basePressure, uint32_t currentPressure, uint32_t temp);
 
 
 #endif /* LPS25HB_H_ */

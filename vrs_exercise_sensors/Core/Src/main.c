@@ -46,6 +46,8 @@ uint32_t data_read_R1=0;
 uint32_t data_read_R2=0;
 uint32_t data_read_R3=0;
 
+uint32_t basePressure=0;
+uint32_t baseTemperature=0;
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -132,7 +134,9 @@ int main(void)
   USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
   LL_mDelay(500);
 
-
+  //Base pressure
+  basePressure=pressureRead();
+  baseTemperature=24;
 
   //Reset memory of usartMsgDebug
 
@@ -144,17 +148,21 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
-
-
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
 	  data_read=0;
 	  data_read=pressureRead();
-	  snprintf(periodic_msg, sizeof(periodic_msg), "Presure: %lu \r\n", data_read);
+	  snprintf(periodic_msg, sizeof(periodic_msg), "Presure: %lu Height: %lf \r\n", data_read, heightCalculation(basePressure+200, data_read, baseTemperature));
 	  USART2_PutBuffer(periodic_msg, sizeof(periodic_msg));
-	  LL_mDelay(500);
+	  LL_mDelay(100);
 
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
+
+
+	  //Reading Moisture and Temperature [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
+
+
+
+	  //Reading Moisture and Temperature [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
