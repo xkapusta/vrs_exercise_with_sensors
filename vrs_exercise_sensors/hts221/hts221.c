@@ -26,8 +26,8 @@ void hts221_Init(void){
 
 	//Sensor settings [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
 	if(writeSettingsSensor_HT == 0){
-		uint8_t settingsREG1=0xC0;
-		uint8_t settingsRES=0x1;
+		uint8_t settingsREG1=0x82;
+		uint8_t settingsRES=0x12;
 		i2c_write(HTS221_DEVICE_ADDRESS_WRITE, HTS221_CTRL_REG1, settingsREG1, 1);
 		i2c_write(HTS221_DEVICE_ADDRESS_WRITE, HTS221_AV_CONF, settingsRES, 1);
 
