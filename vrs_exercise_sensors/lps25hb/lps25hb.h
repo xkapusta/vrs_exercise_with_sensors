@@ -32,9 +32,13 @@
 #define 	LPS25HB_RPDS_L					0x39
 #define 	LPS25HB_RPDS_H					0x3A
 
-void lps25hb_Init(void);
-uint32_t pressureRead(void);
-double heightCalculation(uint32_t basePressure, uint32_t currentPressure, uint32_t temp);
+#define 	LPS25HB_FIFO_CTRL				0x2E
 
+
+void lps25hb_Init(void);
+float pressureRead(void);
+double heightCalculation(float basePressure, float currentPressure, float temp);
+void lps25hb_WriteCallback(uint32_t (*callback)(uint8_t, uint8_t, uint8_t, uint8_t));
+void lps25hb_ReadCallback(uint32_t (*callback)(uint8_t, uint8_t, uint8_t));
 
 #endif /* LPS25HB_H_ */

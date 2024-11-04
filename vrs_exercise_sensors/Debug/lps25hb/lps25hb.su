@@ -1,3 +1,5 @@
-../lps25hb/lps25hb.c:23:6:lps25hb_Init	16	static
-../lps25hb/lps25hb.c:59:10:pressureRead	8	static
-../lps25hb/lps25hb.c:67:8:heightCalculation	32	static
+../lps25hb/lps25hb.c:29:6:lps25hb_ReadCallback	16	static
+../lps25hb/lps25hb.c:34:6:lps25hb_WriteCallback	16	static
+../lps25hb/lps25hb.c:41:6:lps25hb_Init	16	static
+../lps25hb/lps25hb.c:83:7:pressureRead	8	static
+../lps25hb/lps25hb.c:92:8:heightCalculation	32	static

@@ -152,7 +152,7 @@ uint32_t i2c_read(uint8_t slave_address, uint8_t register_address, uint8_t numbe
 	}
 }
 
-uint8_t i2c_write(uint8_t slave_address, uint8_t register_address, uint8_t data, uint8_t number_of_registers){
+uint32_t i2c_write(uint8_t slave_address, uint8_t register_address, uint8_t data, uint8_t number_of_registers){
 
 	if(number_of_registers == 2){
 		register_address |= 0x80;

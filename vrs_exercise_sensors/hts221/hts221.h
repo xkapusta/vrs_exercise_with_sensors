@@ -29,11 +29,22 @@
 
 #define 	HTS221_H0_rH_x2			0x30
 #define 	HTS221_H1_rH_x2			0x31
+
 #define 	HTS221_T1_T0_msb		0x35
+
+#define 	HTS221_H0_T0_OUT		0x36 // Dis is 36 and 37
+#define 	HTS221_H1_T0_OUT		0x3A // Double 8
 
 #define 	HTS221_T0_degC_x8		0x32
 #define 	HTS221_T1_degC_x8		0x33
 
+#define 	HTS221_T0_OUT			0x3C // Double 8
+#define 	HTS221_T1_OUT			0x3E // Double 8
+
+
 void hts221_Init(void);
+float humidityRead(void);
+float tempreatureRead(void);
+
 
 #endif /* HTS221_H_ */

@@ -46,9 +46,13 @@ uint32_t data_read_R1=0;
 uint32_t data_read_R2=0;
 uint32_t data_read_R3=0;
 
-uint32_t basePressure=0;
-uint32_t baseTemperature=0;
+float pressure=0;
+float basePressure=0;
+float baseTemperature=0;
 
+float humidity=0;
+
+float temperature=0;
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -126,14 +130,22 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  //Sensors setup
-  lps25hb_Init();
-  hts221_Init();
 
-  //Print start of the code
   sprintf(usartMsgDebug, "[_][_][_]Program Start[_][_][_]\n\r");
   USART2_PutBuffer(usartMsgDebug, sizeof(usartMsgDebug));
   LL_mDelay(500);
+
+  //Sensors setup
+  lps25hb_Init();
+  //lps25hb_WriteCallback(i2c_write);
+  //lps25hb_ReadCallback(i2c_read);
+
+  hts221_Init();
+  //hts221_WriteCallback(i2c_write);
+  //hts221_ReadCallback(i2c_read);
+
+  //Print start of the code
+
 
   //Base pressure
   basePressure=pressureRead();
@@ -150,11 +162,15 @@ int main(void)
   {
     /* USER CODE END WHILE */
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]
-	  data_read=0;
-	  data_read=pressureRead();
-	  snprintf(periodic_msg, sizeof(periodic_msg), "Presure: %lu Height: %lf \r\n", data_read, heightCalculation(basePressure+200, data_read, baseTemperature));
+	  pressure=pressureRead();
+
+	  humidity=humidityRead();
+
+	  temperature=tempreatureRead();
+
+	  snprintf(periodic_msg, sizeof(periodic_msg), "T: %.1f [C] Hu: %.0f [%%] P: %.2f [hPa] H: %.2f [m] \r\n", temperature*0.08, humidity/1000, pressure, heightCalculation(basePressure, pressure, baseTemperature));
 	  USART2_PutBuffer(periodic_msg, sizeof(periodic_msg));
-	  LL_mDelay(100);
+	  LL_mDelay(500);
 
 	  //Reading pressure [_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_][_]***
 
