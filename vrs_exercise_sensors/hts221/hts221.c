@@ -151,7 +151,7 @@ float tempreatureRead(void){
 	temperature_value=(float)((((T1_degC-T0_degC)*(T_OUT-T0_OUT))/(T1_OUT-T0_OUT))+T0_degC);
 	temperature_value_1=(float)(temperature_value)*temperatureMultiplier;
 
-	return temperature_value_1;
+	return temperature_value; // Hmmmmmmmmmmmmmmmmmmmmmmm
 }
 
 
