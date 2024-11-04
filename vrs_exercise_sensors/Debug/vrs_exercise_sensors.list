@@ -7116,7 +7116,7 @@ float tempreatureRead(void){
  8003034:	4313      	orrs	r3, r2
  8003036:	4a19      	ldr	r2, [pc, #100]	@ (800309c <tempreatureRead+0x90>)
  8003038:	6013      	str	r3, [r2, #0]
-	temperature_value=(float)((((T1_degC-T0_degC)*(T_OUT-T0_OUT))/(T1_OUT-T0_OUT))+T0_degC);
+	temperature_value=(float)((((T1_degC-T0_degC)*(T_OUT-T0_OUT))/(T1_OUT-T0_OUT))+T0_degC); //Maybe this dont work too because why would it
  800303a:	4b19      	ldr	r3, [pc, #100]	@ (80030a0 <tempreatureRead+0x94>)
  800303c:	681a      	ldr	r2, [r3, #0]
  800303e:	4b19      	ldr	r3, [pc, #100]	@ (80030a4 <tempreatureRead+0x98>)

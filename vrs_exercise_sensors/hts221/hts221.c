@@ -148,7 +148,7 @@ float tempreatureRead(void){
 
 	T_OUT=(uint32_t)i2c_read(HTS221_DEVICE_ADDRESS_READ, HTS221_TEMP_OUT_L, 2);
 	T_OUT |= ((T_OUT >> 15) & 1) << 31;
-	temperature_value=(float)((((T1_degC-T0_degC)*(T_OUT-T0_OUT))/(T1_OUT-T0_OUT))+T0_degC);
+	temperature_value=(float)((((T1_degC-T0_degC)*(T_OUT-T0_OUT))/(T1_OUT-T0_OUT))+T0_degC); //Maybe this dont work too because why would it
 	temperature_value_1=(float)(temperature_value)*temperatureMultiplier;
 
 	return temperature_value; // Hmmmmmmmmmmmmmmmmmmmmmmm
