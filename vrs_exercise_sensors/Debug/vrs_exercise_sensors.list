@@ -7150,7 +7150,7 @@ float tempreatureRead(void){
  8003084:	4b0b      	ldr	r3, [pc, #44]	@ (80030b4 <tempreatureRead+0xa8>)
  8003086:	edc3 7a00 	vstr	s15, [r3]
 
-	return temperature_value; // Hmmmmmmmmmmmmmmmmmmmmmmm
+	return temperature_value; // Hmmmmmmmmmmmmmmmmmmmmmmmmmmmm
  800308a:	4b03      	ldr	r3, [pc, #12]	@ (8003098 <tempreatureRead+0x8c>)
  800308c:	681b      	ldr	r3, [r3, #0]
  800308e:	ee07 3a90 	vmov	s15, r3
